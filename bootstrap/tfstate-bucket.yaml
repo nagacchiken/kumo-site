@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3 bucket for kumo-site Terraform state (S3 native locking, no DynamoDB)
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: kumo-site
+    AllowedPattern: "^[a-z0-9-]+$"
+  NoncurrentVersionRetentionDays:
+    Type: Number
+    Default: 90
+    MinValue: 1
+
+Resources:
+  TfStateBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub "${ProjectName}-tfstate-${AWS::AccountId}-${AWS::Region}"
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-noncurrent-versions
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: !Ref NoncurrentVersionRetentionDays
+          - Id: abort-incomplete-multipart-uploads
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
+      Tags:
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: ManagedBy
+          Value: cloudformation
+
+  TfStateBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref TfStateBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource:
+              - !GetAtt TfStateBucket.Arn
+              - !Sub "${TfStateBucket.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
+Outputs:
+  BucketName:
+    Value: !Ref TfStateBucket
+  BucketArn:
+    Value: !GetAtt TfStateBucket.Arn

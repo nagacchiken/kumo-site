@@ -3,6 +3,9 @@
 !.gitignore
 !.env.example
 !.github/
+!.pre-commit-config.yaml
+!.terraform-version
+!.terraform.lock.hcl
 
 # OS
 Thumbs.db
@@ -20,3 +23,19 @@ out/
 
 # Editors
 *.swp
+
+# Terraform
+# (.terraform/ is already ignored by .*)
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+crash.log
+crash.*.log
+*.tfplan
+backend.hcl
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
