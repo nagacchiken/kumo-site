@@ -1,0 +1,20 @@
+{
+  "name": "@kumo-site/api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.ts",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/index.mjs",
+    "start": "node dist/index.mjs",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.5",
+    "hono": "4.13.14"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

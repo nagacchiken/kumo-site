@@ -3,6 +3,7 @@
 !.gitignore
 !.env.example
 !.github/
+!.node-version
 !.pre-commit-config.yaml
 !.terraform-version
 !.terraform.lock.hcl

@@ -1,4 +1,5 @@
 # kumo-site
+
 ## 開発環境のセットアップ
 
 コミット時に [gitleaks](https://github.com/gitleaks/gitleaks) で秘密情報の混入をチェックするため、[pre-commit](https://pre-commit.com/) を使います。
