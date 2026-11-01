@@ -4,6 +4,10 @@
 !.env.example
 !.github/
 !.node-version
+!.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 !.pre-commit-config.yaml
 !.terraform-version
 !.terraform.lock.hcl

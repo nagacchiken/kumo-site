@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "hashicorp.terraform",
+    "vitest.explorer",
+    "github.vscode-github-actions",
+    "kddejong.vscode-cfn-lint"
+  ]
+}
